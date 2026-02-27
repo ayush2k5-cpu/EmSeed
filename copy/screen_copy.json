@@ -1,0 +1,44 @@
+{
+  "onboarding": {
+    "headline": "Understand how you connect.",
+    "subline": "Answer 12 quick questions. We'll map your communication style.",
+    "cta": "Let's begin",
+    "archetype_reveal": {
+      "D": { "label": "Dominant", "tagline": "You lead. You decide. You deliver." },
+      "I": { "label": "Influential", "tagline": "You inspire. You energise. You connect." },
+      "S": { "label": "Steady", "tagline": "You support. You listen. You hold the team together." },
+      "C": { "label": "Conscientious", "tagline": "You analyse. You plan. You build things right." }
+    },
+    "questions": []
+  },
+  "compose": {
+    "headline": "Write with empathy.",
+    "placeholder": "Type your message here...",
+    "cta": "Rewrite for your team",
+    "hint": "EmSeed will personalise this message for each recipient.",
+    "loading_text": "Personalising your message...",
+    "card_labels": {
+      "D": "For Riya",
+      "S": "For Karan",
+      "C": "For Priya"
+    }
+  },
+  "pulse": {
+    "headline": "Team Resonance",
+    "subline": "How your team is receiving your communication.",
+    "alert_message": "Disengagement spreading. One or more team members need direct attention.",
+    "empty_state": "No signals yet. Send your first message to start tracking.",
+    "score_labels": {
+      "high": "Connected",
+      "medium": "Stable",
+      "low": "At risk"
+    }
+  },
+  "kill_switch": {
+    "headline": "Stop. Show up.",
+    "message": "This person doesn't need a better message. They need you.",
+    "subline": "EmSeed has paused AI optimisation for this team member.",
+    "cta": "Schedule a 1:1",
+    "back_label": "Back to dashboard"
+  }
+}

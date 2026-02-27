@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "question": "When your team faces a crisis, you...",
+    "options": [
+      { "text": "Take charge immediately and make the call", "disc": "D" },
+      { "text": "Rally the team and keep spirits up", "disc": "I" },
+      { "text": "Support whoever is leading and ensure everyone's okay", "disc": "S" },
+      { "text": "Gather all information before acting", "disc": "C" }
+    ]
+  },
+  {
+    "id": 2,
+    "question": "When giving feedback to a colleague, you tend to...",
+    "options": [
+      { "text": "Be direct — tell them exactly what needs to change", "disc": "D" },
+      { "text": "Start with what's going well to keep them motivated", "disc": "I" },
+      { "text": "Frame it as a conversation, checking how they feel first", "disc": "S" },
+      { "text": "Prepare specific examples and a structured improvement plan", "disc": "C" }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Your ideal work environment is...",
+    "options": [
+      { "text": "Fast-paced, high-stakes, with clear ownership", "disc": "D" },
+      { "text": "Collaborative, social, with room for creativity", "disc": "I" },
+      { "text": "Stable, predictable, with a strong team culture", "disc": "S" },
+      { "text": "Organised, quality-driven, with defined processes", "disc": "C" }
+    ]
+  },
+  {
+    "id": 4,
+    "question": "When a project changes direction last-minute, you...",
+    "options": [
+      { "text": "Immediately replan and drive the new direction", "disc": "D" },
+      { "text": "Keep the team's morale up and focus on the opportunity", "disc": "I" },
+      { "text": "Feel unsettled but adapt once the team aligns", "disc": "S" },
+      { "text": "Want to understand the reasoning and new requirements fully", "disc": "C" }
+    ]
+  },
+  {
+    "id": 5,
+    "question": "When you achieve something significant at work, you prefer...",
+    "options": [
+      { "text": "Being recognised for the result and impact", "disc": "D" },
+      { "text": "Celebrating with the team and sharing the credit", "disc": "I" },
+      { "text": "Knowing that everyone around you is doing well too", "disc": "S" },
+      { "text": "Seeing the quality of the work speak for itself", "disc": "C" }
+    ]
+  },
+  {
+    "id": 6,
+    "question": "In a team meeting with disagreement, you...",
+    "options": [
+      { "text": "State your position clearly and push for a decision", "disc": "D" },
+      { "text": "Try to find common ground and keep the energy positive", "disc": "I" },
+      { "text": "Listen carefully and avoid escalating tension", "disc": "S" },
+      { "text": "Present the facts and logical arguments for your view", "disc": "C" }
+    ]
+  },
+  {
+    "id": 7,
+    "question": "When you receive a message from your manager, you most notice...",
+    "options": [
+      { "text": "Whether it gets to the point quickly", "disc": "D" },
+      { "text": "The tone — whether it feels warm or cold", "disc": "I" },
+      { "text": "Whether it feels supportive or pressured", "disc": "S" },
+      { "text": "Whether it's accurate, complete, and makes sense", "disc": "C" }
+    ]
+  },
+  {
+    "id": 8,
+    "question": "Your biggest frustration at work is...",
+    "options": [
+      { "text": "Slow decisions and too many approvals", "disc": "D" },
+      { "text": "Being isolated or not connected to the team", "disc": "I" },
+      { "text": "Sudden changes without warning or explanation", "disc": "S" },
+      { "text": "Vague instructions and inconsistent standards", "disc": "C" }
+    ]
+  },
+  {
+    "id": 9,
+    "question": "When onboarding to a new role, you first look for...",
+    "options": [
+      { "text": "What you're accountable for and what success looks like", "disc": "D" },
+      { "text": "Who you'll be working with and how the team connects", "disc": "I" },
+      { "text": "The culture and whether people support each other", "disc": "S" },
+      { "text": "Documentation, processes, and how things are done", "disc": "C" }
+    ]
+  },
+  {
+    "id": 10,
+    "question": "You communicate best when messages are...",
+    "options": [
+      { "text": "Short, direct, and action-oriented", "disc": "D" },
+      { "text": "Personal, energetic, and enthusiastic", "disc": "I" },
+      { "text": "Warm, reassuring, and collaborative", "disc": "S" },
+      { "text": "Detailed, accurate, and logically structured", "disc": "C" }
+    ]
+  },
+  {
+    "id": 11,
+    "question": "When your team is under pressure, your instinct is to...",
+    "options": [
+      { "text": "Cut the noise and focus everyone on what matters most", "disc": "D" },
+      { "text": "Rally the team and keep morale from dropping", "disc": "I" },
+      { "text": "Check in on individuals so no one is struggling alone", "disc": "S" },
+      { "text": "Analyse the situation carefully before recommending action", "disc": "C" }
+    ]
+  },
+  {
+    "id": 12,
+    "question": "The leadership quality you value most is...",
+    "options": [
+      { "text": "Decisiveness — making bold calls under pressure", "disc": "D" },
+      { "text": "Charisma — inspiring and motivating people", "disc": "I" },
+      { "text": "Empathy — genuinely caring about team wellbeing", "disc": "S" },
+      { "text": "Expertise — knowing their domain deeply and precisely", "disc": "C" }
+    ]
+  }
+]
