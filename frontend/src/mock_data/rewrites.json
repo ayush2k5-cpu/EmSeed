@@ -1,0 +1,71 @@
+{
+  "emp_001": {
+    "employee_id": "emp_001",
+    "disc_type": "D",
+    "original_draft": "Team, we need to hit our deadline this week.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "D",
+        "text": "Team — we're behind on the milestone. I need everyone locked in this week. Execute.",
+        "reasoning": "Direct, results-focused, no hedging."
+      },
+      {
+        "variant": "I",
+        "text": "Hey team! Big week ahead — so excited to see us nail this milestone together. Let's bring the energy!",
+        "reasoning": "Energetic, recognition-forward, collaborative."
+      },
+      {
+        "variant": "S",
+        "text": "Hi everyone — just checking in as we head into the final push. We're all in this together, and I know we'll get there.",
+        "reasoning": "Reassuring, stability-focused, belonging-forward."
+      }
+    ]
+  },
+  "emp_002": {
+    "employee_id": "emp_002",
+    "disc_type": "S",
+    "original_draft": "Karan, we need to wrap up by Friday.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "S",
+        "text": "Karan, just wanted to check in — hope you're doing okay. We're in the final stretch and I want to make sure you have everything you need to close this out.",
+        "reasoning": "Reassurance and belonging, not pressure. S-types need stability signals."
+      },
+      {
+        "variant": "D",
+        "text": "Karan — deadline is Friday. What do you need from me to close this out?",
+        "reasoning": "Direct, action-oriented, removes ambiguity."
+      },
+      {
+        "variant": "C",
+        "text": "Karan, the delivery is scheduled for Friday EOD. Current plan: [your tasks] → review → submit. Let me know if anything needs clarification.",
+        "reasoning": "Structured, process-forward, no vagueness."
+      }
+    ]
+  },
+  "emp_003": {
+    "employee_id": "emp_003",
+    "disc_type": "C",
+    "original_draft": "Priya, please confirm status for the Friday deadline.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "C",
+        "text": "Priya — per the project timeline, the deliverable is due Friday at 5pm IST. Please confirm current status and flag any blockers by EOD today.",
+        "reasoning": "Data-anchored, process-clear, no hype language."
+      },
+      {
+        "variant": "D",
+        "text": "Priya, Friday deadline. What's the status? Any blockers?",
+        "reasoning": "Concise and results-oriented."
+      },
+      {
+        "variant": "S",
+        "text": "Hi Priya — just a heads-up on the Friday deadline. Let me know how you're tracking and if there's anything I can help unblock.",
+        "reasoning": "Supportive framing, collaborative tone."
+      }
+    ]
+  }
+}

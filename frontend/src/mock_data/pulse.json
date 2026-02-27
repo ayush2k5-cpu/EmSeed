@@ -1,0 +1,40 @@
+{
+  "team_id": "team_alpha",
+  "team_resonance_avg": 58,
+  "member_count": 3,
+  "members": [
+    {
+      "employee_id": "emp_001",
+      "name": "Riya",
+      "disc_type": "D",
+      "resonance_7day_avg": 88,
+      "last_resonance": 90,
+      "last_emoji": "✅",
+      "signal_count": 3
+    },
+    {
+      "employee_id": "emp_002",
+      "name": "Karan",
+      "disc_type": "S",
+      "resonance_7day_avg": 23,
+      "last_resonance": 15,
+      "last_emoji": "😶",
+      "signal_count": 3
+    },
+    {
+      "employee_id": "emp_003",
+      "name": "Priya",
+      "disc_type": "C",
+      "resonance_7day_avg": 68,
+      "last_resonance": 75,
+      "last_emoji": "🫂",
+      "signal_count": 3
+    }
+  ],
+  "contagion": {
+    "contagion_coefficient": 0.33,
+    "affected_count": 1,
+    "total_count": 3,
+    "alert": false
+  }
+}
