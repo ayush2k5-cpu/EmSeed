@@ -1,0 +1,44 @@
+"""
+backend/main.py
+EmSeed FastAPI application entry point.
+Run: uvicorn backend.main:app --reload --port 8000
+"""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from backend.db.database import init_db
+
+app = FastAPI(
+    title="EmSeed API",
+    version="1.0.0",
+    description="Empathy Operationalised — Backend API",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],   # React dev server
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Import routers
+from backend.api import employees, signals, teams, alerts, audit
+
+app.include_router(employees.router, prefix="/api")
+app.include_router(signals.router,   prefix="/api")
+app.include_router(teams.router,     prefix="/api")
+app.include_router(alerts.router,    prefix="/api")
+app.include_router(audit.router,     prefix="/api")
+
+
+@app.on_event("startup")
+async def on_startup():
+    """Auto-create schema tables on startup — safe, uses CREATE IF NOT EXISTS."""
+    init_db()
+    print("[ok] EmSeed DB initialised.")
+
+
+@app.get("/")
+async def root():
+    return {"message": "EmSeed API is running", "docs": "/docs"}
