@@ -74,14 +74,14 @@ async def get_team_pulse(team_id: str, days: int = 7):
 
         team_avg = round(sum(all_avgs) / len(all_avgs), 1) if all_avgs else 0.0
 
-        # Compute contagion coefficient
-        # (proportion of members below contagion threshold of 40)
-        CONTAGION_THRESHOLD = 40
-        affected = [m for m in member_data if (m["last_resonance"] or 100) < CONTAGION_THRESHOLD]
-        affected_count = len(affected)
-        total_count = len(member_data)
-        coeff = round(affected_count / total_count, 2) if total_count > 0 else 0.0
-        contagion_alert = coeff >= 0.5   # alert if ≥50% of team is in low resonance
+        # Compute contagion coefficient via RLM engine for consistency
+        from backend.engines.rlm_engine import compute_contagion, RLM_CONFIG
+        team_signals_map = {m["employee_id"]: [m["last_resonance"]] if m["last_resonance"] is not None else [] for m in member_data}
+        contagion_result = compute_contagion(team_signals_map)
+        coeff = contagion_result["contagion_coefficient"]
+        affected_count = contagion_result["affected_count"]
+        total_count = contagion_result["total_count"]
+        contagion_alert = contagion_result["alert"]   # uses RLM_CONFIG threshold (0.4), consistent with rlm_engine
 
         return success_response({
             "team_id": team_id,
@@ -95,6 +95,7 @@ async def get_team_pulse(team_id: str, days: int = 7):
                 "alert": contagion_alert,
             },
         })
+
 
     finally:
         db.close()

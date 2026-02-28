@@ -1,3 +1,112 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes seedGrow {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes wordReveal {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes voidFade {
+    from {
+        background-color: #FFD2C2;
+    }
+
+    to {
+        background-color: #0A0A0F;
+    }
+}
+
+.animate-seed-grow {
+    animation: seedGrow 2s ease-out forwards;
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.5s ease-out forwards;
+}
+
+.animate-pulse-slow {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-slide-down {
+    animation: slideDown 0.4s ease-out forwards;
+}
+
+.animate-void-fade {
+    animation: voidFade 0.8s ease-out forwards;
+}
+
+.animate-word-reveal {
+    animation: wordReveal 0.6s ease-out forwards;
+}

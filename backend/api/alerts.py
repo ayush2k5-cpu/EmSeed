@@ -75,7 +75,12 @@ def _call_kill_switch(employee_id: str, db) -> dict:
     """Delegates to Lead's check_kill_switch() — graceful import fallback."""
     try:
         from backend.engines.rlm_engine import check_kill_switch
-        return check_kill_switch(employee_id, db)
+        rows = db.execute(
+            "SELECT resonance_score FROM signals WHERE employee_id = ? ORDER BY created_at ASC",
+            (employee_id,)
+        ).fetchall()
+        recent_signals = [{"resonance_score": r["resonance_score"]} for r in rows]
+        return check_kill_switch(employee_id, recent_signals)
     except ImportError:
         return {"status": "ok", "employee_id": employee_id}
     except Exception as e:
@@ -86,7 +91,15 @@ def _call_contagion(team_id: str, member_ids: list, db) -> dict:
     """Delegates to Lead's compute_contagion() — graceful import fallback."""
     try:
         from backend.engines.rlm_engine import compute_contagion
-        return compute_contagion(team_id, member_ids, db)
+        # Build team_signals dict: {employee_id: [list of resonance scores]}
+        team_signals = {}
+        for emp_id in member_ids:
+            rows = db.execute(
+                "SELECT resonance_score FROM signals WHERE employee_id = ? ORDER BY created_at ASC",
+                (emp_id,)
+            ).fetchall()
+            team_signals[emp_id] = [r["resonance_score"] for r in rows]
+        return compute_contagion(team_signals)
     except ImportError:
         # Fallback: basic threshold-based contagion
         THRESHOLD = 40

@@ -60,13 +60,8 @@ async def generate_rewrites(payload: MCPPayload, fallback_prompt: Optional[str] 
     disc_type = payload.recipient_context.disc_type
     energy_level = payload.recipient_context.energy_level
     
-    mapping = {
-        "D": ["D", "I", "S"],
-        "I": ["I", "D", "S"],
-        "S": ["S", "D", "C"],
-        "C": ["C", "D", "I"]
-    }
-    variants = mapping.get(disc_type, ["D", "I", "S"])
+    # Generate ONLY the 1 variant needed for the specific recipient to save Groq API quota and avoid instant RateLimitErrors
+    variants = [disc_type]
     
     user_prompt = f"Original message: {payload.original_draft}\nRecipient DISC type: {disc_type}\nEnergy level: {energy_level}/100"
     

@@ -6,3 +6,4 @@ groq>=0.13.0
 google-generativeai>=0.8.0
 aiohttp>=3.11.0
 httpx
+requests>=2.32.0

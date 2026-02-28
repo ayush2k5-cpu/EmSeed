@@ -94,7 +94,13 @@ def _call_kill_switch(employee_id: str, db) -> dict:
     """
     try:
         from backend.engines.rlm_engine import check_kill_switch
-        return check_kill_switch(employee_id, db)
+        # Fetch recent signals in the format check_kill_switch expects
+        rows = db.execute(
+            "SELECT resonance_score FROM signals WHERE employee_id = ? ORDER BY created_at ASC",
+            (employee_id,)
+        ).fetchall()
+        recent_signals = [{"resonance_score": r["resonance_score"]} for r in rows]
+        return check_kill_switch(employee_id, recent_signals)
     except ImportError:
         # Lead's rlm_engine.py not yet available — return safe default
         return {"status": "ok", "employee_id": employee_id}

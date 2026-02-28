@@ -8,11 +8,13 @@
 INSERT OR REPLACE INTO employees
     (id, name, disc_type, language_preference, communication_preference, energy_baseline, team_id, created_at, updated_at)
 VALUES
-    ('emp_001', 'Riya',  'D', 'en', 'direct',     80, 'team_alpha',
+    ('priyanshu', 'Priyanshu',  'D', 'en', 'direct',     80, 'team_alpha',
      strftime('%Y-%m-%dT%H:%M:%SZ','now'), strftime('%Y-%m-%dT%H:%M:%SZ','now')),
-    ('emp_002', 'Karan', 'S', 'hi', 'supportive', 45, 'team_alpha',
+    ('granth', 'Granth', 'S', 'hi', 'supportive', 28, 'team_alpha',
      strftime('%Y-%m-%dT%H:%M:%SZ','now'), strftime('%Y-%m-%dT%H:%M:%SZ','now')),
-    ('emp_003', 'Priya', 'C', 'en', 'analytical', 70, 'team_alpha',
+    ('anika', 'Anika', 'C', 'en', 'analytical', 55, 'team_alpha',
+     strftime('%Y-%m-%dT%H:%M:%SZ','now'), strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+    ('rahul', 'Rahul', 'I', 'en', 'collaborative', 18, 'team_alpha',
      strftime('%Y-%m-%dT%H:%M:%SZ','now'), strftime('%Y-%m-%dT%H:%M:%SZ','now'));
 
 -- ── SIGNALS: Delete old demo signals before re-seeding ───────
@@ -21,21 +23,28 @@ DELETE FROM signals WHERE message_id IN (
     'msg_demo_01', 'msg_demo_02', 'msg_demo_03'
 );
 
--- Riya (emp_001): High resonance — D archetype, engaged
+-- Priyanshu: High resonance -- D archetype, engaged
 INSERT INTO signals (employee_id, message_id, emoji_code, resonance_score) VALUES
-    ('emp_001', 'msg_demo_01', '✅', 90),
-    ('emp_001', 'msg_demo_02', '🔥', 85),
-    ('emp_001', 'msg_demo_03', '✅', 90);
+    ('priyanshu', 'msg_demo_01', '✅', 90),
+    ('priyanshu', 'msg_demo_02', '🔥', 85),
+    ('priyanshu', 'msg_demo_03', '✅', 90);
 
--- Karan (emp_002): Declining resonance — will trigger kill-switch in demo
--- Scores: 40 → 15 → 15  (all 3 below threshold of 25)
+-- Granth: Moderate resonance -- so we can actually see the Sarvam Hindi translation in the UI!
+-- Previously this was (22, 15, 15) which triggered the Kill Switch and hid the Hindi rewrites!
 INSERT INTO signals (employee_id, message_id, emoji_code, resonance_score) VALUES
-    ('emp_002', 'msg_demo_01', '🤔', 40),
-    ('emp_002', 'msg_demo_02', '😶', 15),
-    ('emp_002', 'msg_demo_03', '😶', 15);
+    ('granth', 'msg_demo_01', '✅', 90),
+    ('granth', 'msg_demo_02', '🫂', 75),
+    ('granth', 'msg_demo_03', '🤔', 40);
 
--- Priya (emp_003): Moderate stable resonance — C archetype
+-- Anika: Moderate stable resonance -- C archetype
 INSERT INTO signals (employee_id, message_id, emoji_code, resonance_score) VALUES
-    ('emp_003', 'msg_demo_01', '🫂', 75),
-    ('emp_003', 'msg_demo_02', '✅', 90),
-    ('emp_003', 'msg_demo_03', '🤔', 40);
+    ('anika', 'msg_demo_01', '🫂', 75),
+    ('anika', 'msg_demo_02', '✅', 90),
+    ('anika', 'msg_demo_03', '🤔', 40);
+
+-- Rahul: Declining resonance -- all 3 signals below kill-switch floor (25)
+-- This is used SPECIFICALLY to trigger the Kill-Switch demo!
+INSERT INTO signals (employee_id, message_id, emoji_code, resonance_score) VALUES
+    ('rahul', 'msg_demo_01', '🤔', 22),
+    ('rahul', 'msg_demo_02', '😶', 15),
+    ('rahul', 'msg_demo_03', '😶', 15);

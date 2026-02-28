@@ -21,21 +21,21 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],
 
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Import routers
-from backend.api import employees, signals, teams, alerts, audit
+from backend.api import employees, signals, teams, alerts, audit, rewrite
 
 app.include_router(employees.router, prefix="/api")
 app.include_router(signals.router,   prefix="/api")
 app.include_router(teams.router,     prefix="/api")
 app.include_router(alerts.router,    prefix="/api")
 app.include_router(audit.router,     prefix="/api")
-# app.include_router(rewrite.router,   prefix="/api")
+app.include_router(rewrite.router,   prefix="/api")
 
 
 @app.on_event("startup")
