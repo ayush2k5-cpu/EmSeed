@@ -102,6 +102,8 @@ EmSeed/
 
 6. **Demo data must be idempotent.** Running `seed_demo.py` twice should not create duplicate employees. Use `INSERT OR REPLACE`.
 
+**Gotcha — re-seed before every demo/session.** `signals.created_at` defaults to `strftime('now')` at insert time, and the kill switch / resonance history only look back 7 days (`get_employee_context(..., days=7)`). If `seed_demo.py` was last run more than 7 days ago, all seeded signals age out of that window silently — the kill switch stops firing and resonance bars go flat, with no error anywhere. Run `python scripts/seed_demo.py` (safe, idempotent) right before demoing or resuming work after a break.
+
 ### Strongly Preferred
 
 - Python: FastAPI + Pydantic. No Django. No Flask.

@@ -34,7 +34,8 @@ export function useDashboardState() {
             let triggerName = '';
 
             const promises = selectedRecipients.map(async (recipientId) => {
-                const response = await fetch('http://localhost:8000/api/rewrite', {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+                const response = await fetch(`${apiUrl}/api/rewrite`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
