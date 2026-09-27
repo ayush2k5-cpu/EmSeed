@@ -45,9 +45,10 @@ def _generate_all_variants(client: Groq, variants: list[str], fallback_prompt: O
     for variant in variants:
         system_prompt = fallback_prompt if fallback_prompt else DISC_PROMPTS.get(variant, "")
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             temperature=0.7,
             max_tokens=300,
+            reasoning_effort="low",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}

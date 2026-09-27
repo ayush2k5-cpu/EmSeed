@@ -12,6 +12,7 @@ export function useDashboardState() {
 
     const [rewrites, setRewrites] = useState<RewriteCardType[]>([]);
     const [killSwitchRecipient, setKillSwitchRecipient] = useState<string>('');
+    const [killSwitchSkipped, setKillSwitchSkipped] = useState<string[]>([]);
 
     const generateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const alertTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -27,11 +28,11 @@ export function useDashboardState() {
         if (message.trim() === '' || selectedRecipients.length === 0) return;
         setIsGenerating(true);
         setRewrites([]);
+        setKillSwitchSkipped([]);
 
         try {
             const fetchedRewrites: RewriteCardType[] = [];
-            let killSwitchTriggered = false;
-            let triggerName = '';
+            const triggeredNames: string[] = [];
 
             const promises = selectedRecipients.map(async (recipientId) => {
                 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -49,8 +50,7 @@ export function useDashboardState() {
 
                 // Kill-switch: backend detected sustained low resonance for this recipient
                 if (json.success && json.data?.kill_switch_engaged) {
-                    killSwitchTriggered = true;
-                    triggerName = recipientId.charAt(0).toUpperCase() + recipientId.slice(1);
+                    triggeredNames.push(recipientId.charAt(0).toUpperCase() + recipientId.slice(1));
                     return; // skip adding a rewrite card for this recipient
                 }
 
@@ -81,23 +81,23 @@ export function useDashboardState() {
 
             await Promise.all(promises);
 
-            // Kill-switch takes priority over modal — fire it immediately
-            if (killSwitchTriggered) {
-                setKillSwitchRecipient(triggerName);
-                setCurrentState('killswitch');
-                return;
-            }
-
             if (fetchedRewrites.length > 0) {
+                // Some recipients got rewrites — show them, and note any that were
+                // skipped for kill-switch rather than discarding the whole batch.
                 setRewrites(fetchedRewrites);
+                setKillSwitchSkipped(triggeredNames);
                 setCurrentState('modal');
+            } else if (triggeredNames.length > 0) {
+                // Every selected recipient hit the kill-switch — nothing left to review.
+                setKillSwitchRecipient(triggeredNames.join(' and '));
+                setCurrentState('killswitch');
             } else {
-                alert("Could not generate rewrites from the backend. Make sure the backend is running on port 8000.");
+                alert("Could not generate rewrites from the backend. Make sure the backend is running.");
                 setCurrentState('default');
             }
         } catch (error) {
             console.error("API Error: ", error);
-            alert("Connection error: Could not reach backend API at localhost:8000.");
+            alert(`Connection error: Could not reach backend API at ${import.meta.env.VITE_API_URL || 'http://localhost:8000'}.`);
             setCurrentState('default');
         } finally {
             setIsGenerating(false);
@@ -119,7 +119,9 @@ export function useDashboardState() {
 
         const tapState = approvedRewrite ? {
             name: approvedRewrite.memberName,
-            message: approvedRewrite.rewrittenMessage
+            message: approvedRewrite.rewrittenMessage,
+            employeeId: approvedRewrite.memberId,
+            messageId: `msg_${Date.now()}`
         } : undefined;
 
         // When sending, instantly transition to the Employee Tap Screen with state
@@ -186,6 +188,7 @@ export function useDashboardState() {
         setMessage,
         rewrites,
         setCurrentState,
-        killSwitchRecipient
+        killSwitchRecipient,
+        killSwitchSkipped
     };
 }
