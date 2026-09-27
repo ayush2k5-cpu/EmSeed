@@ -35,3 +35,11 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Local agent config (personal, not shared)
+.claude/
+.mcp.json
+
+# Graphify local knowledge-graph output (regenerated; canonical copy lives in
+# Ojas vault/graph-imports/EmSeed/)
+graphify-out/

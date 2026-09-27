@@ -12,6 +12,22 @@ from backend.engines.sarvam_engine import generate_indic_rewrite
 from backend.engines.rlm_engine import check_kill_switch
 from backend.db.database import DB_PATH, get_db   # FIX: use absolute path constant
 
+def _write_audit(recipient_id: str, message_id: Optional[str], event_type: str, details: dict):
+    audit_id = "aud_" + _uuid.uuid4().hex[:8]
+    db = get_db()
+    try:
+        db.execute(
+            """
+            INSERT INTO audit_log (audit_id, event_type, employee_id, message_id, payload_summary)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (audit_id, event_type, recipient_id, message_id, json.dumps(details)),
+        )
+        db.commit()
+    finally:
+        db.close()
+    return audit_id
+
 router = APIRouter(tags=["rewrite"])
 
 class RewriteRequest(BaseModel):

@@ -12,12 +12,30 @@ export default function EmojiTapPage() {
     const [showAck, setShowAck] = useState(false)
 
     // Grab the dynamic name and message passed from the Dashboard sending logic
+    const senderName = location.state?.senderName || 'Your Leader'
     const recipientName = location.state?.name || 'Granth'
     const dynamicMessage = location.state?.message ||
         "Your weekend work did not go unnoticed. I see it. This week I need your precision on the API layer specifically — nothing more, nothing beyond that."
+    const employeeId = location.state?.employeeId as string | undefined
+    const messageId = location.state?.messageId as string | undefined
 
     const handleEmojiClick = (index: number) => {
         setSelectedEmoji(index)
+
+        // Record the real signal so the Vitals/Pulse dashboard reflects it.
+        // Fire-and-forget: never block the tap animation on this.
+        if (employeeId && messageId) {
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+            fetch(`${apiUrl}/api/signal/tap`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    employee_id: employeeId,
+                    message_id: messageId,
+                    emoji_code: emojis[index]
+                })
+            }).catch((error) => console.error('Signal tap failed to record:', error))
+        }
 
         setTimeout(() => {
             setShowAck(true)
@@ -38,7 +56,7 @@ export default function EmojiTapPage() {
             <div className="w-full max-w-[540px] flex flex-col items-start relative z-10 animate-fade-up">
                 <div className="mb-8 w-full flex justify-between items-center">
                     <p className="font-sans text-[14px] uppercase tracking-[0.1em] text-violet/60 font-medium">
-                        From: Shivansh
+                        From: {senderName}
                     </p>
                     <div className="px-3 py-1 rounded-full bg-violet/10 text-violet text-[12px] font-semibold tracking-wide">
                         Just Now

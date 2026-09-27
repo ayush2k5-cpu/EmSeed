@@ -8,6 +8,7 @@ interface RewriteModalProps {
     onApprove: (memberId: string) => void;
     onSendAll: () => void;
     onClose: () => void;
+    killSwitchSkipped?: string[];
 }
 
 export default function RewriteModal({
@@ -15,7 +16,8 @@ export default function RewriteModal({
     approvedCards,
     onApprove,
     onSendAll,
-    onClose
+    onClose,
+    killSwitchSkipped = []
 }: RewriteModalProps) {
     return (
         <div className="fixed inset-0 z-50">
@@ -30,6 +32,17 @@ export default function RewriteModal({
                         <h2 className="font-serif text-[28px] text-teal mb-2">Personalised for your team</h2>
                         <p className="font-sans text-[14px] text-teal/60">Review each message. Edit freely. You always decide.</p>
                     </div>
+
+                    {killSwitchSkipped.length > 0 && (
+                        <div className="mb-6 bg-[#FFE8E6] border border-[#E8736A] rounded-[14px] p-5">
+                            <div className="font-sans text-[14px] font-semibold text-[#E8736A]">
+                                ⚠️ {killSwitchSkipped.join(' and ')} {killSwitchSkipped.length === 1 ? 'was' : 'were'} skipped
+                            </div>
+                            <div className="mt-2 font-sans text-[13px] text-teal">
+                                Sustained low resonance detected. {killSwitchSkipped.length === 1 ? "This isn't" : "These aren't"} a message problem — talk to {killSwitchSkipped.length === 1 ? 'them' : 'them'} directly instead.
+                            </div>
+                        </div>
+                    )}
 
                     <div className="flex flex-col gap-4">
                         {rewrites.map((rewrite, i) => (

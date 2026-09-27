@@ -31,7 +31,8 @@ export default function DashboardPage() {
         setMessage,
         rewrites,
         setCurrentState,
-        killSwitchRecipient
+        killSwitchRecipient,
+        killSwitchSkipped
     } = useDashboardState();
 
     useEffect(() => {
@@ -85,6 +86,7 @@ export default function DashboardPage() {
                     onApprove={handleApproveCard}
                     onSendAll={() => handleSendAll(navigate)}
                     onClose={handleCloseModal}
+                    killSwitchSkipped={killSwitchSkipped}
                 />
             )}
 

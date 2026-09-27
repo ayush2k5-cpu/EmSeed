@@ -67,5 +67,97 @@
         "reasoning": "Supportive framing, collaborative tone."
       }
     ]
+  },
+  "priyanshu": {
+    "employee_id": "priyanshu",
+    "disc_type": "D",
+    "original_draft": "We need to ship the auth refactor by Friday, no exceptions.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "D",
+        "text": "Priyanshu — auth refactor ships Friday, no exceptions. What do you need to make that happen?",
+        "reasoning": "Direct, results-focused, no hedging."
+      },
+      {
+        "variant": "I",
+        "text": "Hey Priyanshu! Big push this week on the auth refactor — excited to see you drive this one home by Friday!",
+        "reasoning": "Energetic, recognition-forward."
+      },
+      {
+        "variant": "C",
+        "text": "Priyanshu — the auth refactor is due Friday. Please confirm scope and flag any blockers today.",
+        "reasoning": "Structured, process-forward."
+      }
+    ]
+  },
+  "granth": {
+    "employee_id": "granth",
+    "disc_type": "S",
+    "original_draft": "We need to ship the auth refactor by Friday, no exceptions.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "S",
+        "text": "Hi Granth — just checking in on the auth refactor. We're aiming for Friday, and I want to make sure you've got everything you need to get there.",
+        "reasoning": "Reassuring, stability-focused, no urgency pressure."
+      },
+      {
+        "variant": "D",
+        "text": "Granth — auth refactor ships Friday. What's blocking you?",
+        "reasoning": "Direct, action-oriented."
+      },
+      {
+        "variant": "C",
+        "text": "Granth — the auth refactor is scheduled for Friday. Current plan: review → test → ship. Let me know if anything needs clarifying.",
+        "reasoning": "Structured, process-forward."
+      }
+    ]
+  },
+  "anika": {
+    "employee_id": "anika",
+    "disc_type": "C",
+    "original_draft": "We need to ship the auth refactor by Friday, no exceptions.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "C",
+        "text": "Anika — the auth refactor is due Friday EOD. Please confirm current status and flag any blockers by end of day.",
+        "reasoning": "Data-anchored, process-clear, no hype language."
+      },
+      {
+        "variant": "D",
+        "text": "Anika, Friday deadline on the auth refactor. Status? Any blockers?",
+        "reasoning": "Concise and results-oriented."
+      },
+      {
+        "variant": "S",
+        "text": "Hi Anika — heads-up on the Friday deadline for the auth refactor. Let me know how you're tracking, happy to help unblock.",
+        "reasoning": "Supportive framing, collaborative tone."
+      }
+    ]
+  },
+  "rahul": {
+    "employee_id": "rahul",
+    "disc_type": "I",
+    "original_draft": "We need to ship the auth refactor by Friday, no exceptions.",
+    "retrieval_source": "mock_data",
+    "rewrites": [
+      {
+        "variant": "I",
+        "text": "Hey Rahul! Auth refactor's due Friday — you've got this, let's bring the energy and get it across the line together!",
+        "reasoning": "Energetic, recognition-forward, connection-driven."
+      },
+      {
+        "variant": "D",
+        "text": "Rahul — auth refactor ships Friday. What do you need from me?",
+        "reasoning": "Direct, action-oriented."
+      },
+      {
+        "variant": "S",
+        "text": "Hi Rahul — just checking in on the auth refactor ahead of Friday. Let me know if you need any support.",
+        "reasoning": "Reassuring, low-pressure framing."
+      }
+    ]
   }
 }

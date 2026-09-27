@@ -18,6 +18,15 @@ def detect_language(text: str) -> str:
     return "en"
 
 
+def _generic_fallback() -> list[dict]:
+    # No mock entry for this employee_id — never impersonate a different employee's canned text.
+    return [{
+        "variant": "generic",
+        "text": "(Live rewrite unavailable — no mock data for this recipient. Please write this message directly.)",
+        "reasoning": "Groq API and mock_data lookup both unavailable for this employee_id."
+    }]
+
+
 def _mock_fallback(employee_id: str) -> list[dict]:
     # Path from backend/: "../frontend/src/mock_data/rewrites.json"
     filepath = os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "src", "mock_data", "rewrites.json")
@@ -26,9 +35,9 @@ def _mock_fallback(employee_id: str) -> list[dict]:
             data = json.load(f)
             if employee_id in data:
                 return data[employee_id].get("rewrites", [])
-            return data.get("emp_002", {}).get("rewrites", [])
+            return _generic_fallback()
     except Exception:
-        return []
+        return _generic_fallback()
 
 
 def _generate_all_variants(client: Groq, variants: list[str], fallback_prompt: Optional[str], user_prompt: str) -> list[dict]:
@@ -36,9 +45,10 @@ def _generate_all_variants(client: Groq, variants: list[str], fallback_prompt: O
     for variant in variants:
         system_prompt = fallback_prompt if fallback_prompt else DISC_PROMPTS.get(variant, "")
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             temperature=0.7,
             max_tokens=300,
+            reasoning_effort="low",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
@@ -54,7 +64,7 @@ def _generate_all_variants(client: Groq, variants: list[str], fallback_prompt: O
 
 async def generate_rewrites(payload: MCPPayload, fallback_prompt: Optional[str] = None) -> list[dict]:
     if not payload.recipient_context:
-        return _mock_fallback("emp_002")
+        return _generic_fallback()
         
     emp_id = payload.recipient_context.employee_id
     disc_type = payload.recipient_context.disc_type
