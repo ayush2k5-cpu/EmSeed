@@ -35,3 +35,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Local agent config (personal, not shared)
+.claude/
+.mcp.json

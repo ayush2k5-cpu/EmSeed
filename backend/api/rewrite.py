@@ -12,6 +12,10 @@ from backend.engines.sarvam_engine import generate_indic_rewrite
 from backend.engines.rlm_engine import check_kill_switch
 from backend.db.database import DB_PATH, get_db   # FIX: use absolute path constant
 
+def _write_audit(recipient_id: str, message_id: Optional[str], event_type: str, details: dict):
+    """Placeholder for future audit logging"""
+    pass
+
 router = APIRouter(tags=["rewrite"])
 
 class RewriteRequest(BaseModel):
