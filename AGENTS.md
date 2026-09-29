@@ -27,6 +27,14 @@
 
 ---
 
+## Where this project lives
+
+The only working copy is `C:\Ojas\projects\active\EmSeed`, a git clone of `ayush2k5-cpu/EmSeed`. Do all work here: `venv/`, `frontend/node_modules/`, `.env` and `emseed.db` are local to it and gitignored. There is no copy on the Desktop or OneDrive (retired 2026-09-29); never create a second clone.
+
+`.env.example` is tracked by git. Never put real keys in it; they go in `.env` only.
+
+---
+
 ## Repository Structure
 
 ```
