@@ -66,7 +66,8 @@ code in `backend/db/audit.py`, `backend/db/database.py`, `backend/api/rewrite.py
 ### 2. Ship the launcher and the safe audit fix · in-progress
 PR #1 already merged to `main` (`c35af08`). `EmSeed.bat` is committed on `dev/lead`, and `dev/lead` (launcher plus feature 1) is pushed as of 2026-09-29 (`97bdd14`) but not merged to `main` yet.
 **Done when:** `EmSeed.bat`, the safe audit writes fix and the docs are on `origin/main`, and a fresh clone starts with the launcher.
-- [ ] Build it: `/develop ship the launcher and the safe audit fix`
+Added `Setup.bat` (2026-09-29) so a fresh clone can get the venv, dependencies, `.env` and demo data before the launcher runs.
+- [x] Build it: `/develop ship the launcher and the safe audit fix`
 - [ ] Verify it: `/check verify ship the launcher and the safe audit fix`
 
 ## Slice 2: Configuration and data joins
