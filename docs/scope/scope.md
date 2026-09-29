@@ -19,7 +19,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | F | MCP tool server | Existing | existing |
 | G | Local launcher (EmSeed.bat) | Existing | in-progress |
 | 1 | Safe audit writes | Slice 1 | done |
-| 2 | Ship the launcher and the safe audit fix | Slice 1 | planned |
+| 2 | Ship the launcher and the safe audit fix | Slice 1 | in-progress |
 | 3 | Env driven model settings | Slice 2 | planned |
 | 4 | Link rewrites to taps by message id | Slice 2 | planned |
 | 5 | Retire legacy demo employees | Slice 3 | planned |
@@ -63,8 +63,8 @@ code in `backend/db/audit.py`, `backend/db/database.py`, `backend/api/rewrite.py
   - [x] Tap route uses it (AC-3, AC-5)
 - [x] Verify it: `/check verify safe audit writes`
 
-### 2. Ship the launcher and the safe audit fix
-PR #1 already merged to `main` (`c35af08`). `EmSeed.bat` is committed on `dev/lead`, but `dev/lead` (launcher plus feature 1) is not pushed or merged to `main` yet.
+### 2. Ship the launcher and the safe audit fix · in-progress
+PR #1 already merged to `main` (`c35af08`). `EmSeed.bat` is committed on `dev/lead`, and `dev/lead` (launcher plus feature 1) is pushed as of 2026-09-29 (`97bdd14`) but not merged to `main` yet.
 **Done when:** `EmSeed.bat`, the safe audit writes fix and the docs are on `origin/main`, and a fresh clone starts with the launcher.
 - [ ] Build it: `/develop ship the launcher and the safe audit fix`
 - [ ] Verify it: `/check verify ship the launcher and the safe audit fix`
