@@ -12,14 +12,15 @@ DB_PATH = os.path.abspath(
 )
 
 
-def get_db() -> sqlite3.Connection:
+def get_db(timeout: float = 5.0) -> sqlite3.Connection:
     """
     Open and return a SQLite connection with:
     - WAL journal mode (safe for concurrent reads)
     - Foreign key enforcement
     - Row factory for dict-like column access
+    `timeout` is how long a locked database is waited on before erroring.
     """
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=timeout)
     conn.row_factory = sqlite3.Row          # access columns by name: row["disc_type"]
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA foreign_keys=ON;")

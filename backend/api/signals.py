@@ -6,6 +6,7 @@ Endpoints:
 
 from fastapi import APIRouter, HTTPException
 from backend.db.database import get_db
+from backend.db.audit import write_audit
 from backend.models.schemas import (
     SignalTapRequest,
     SignalTapResponse,
@@ -56,19 +57,9 @@ async def signal_tap(body: SignalTapRequest):
         ).fetchone()
         created_at = row["created_at"] if row else ""
 
-        # Log to audit_log
-        import uuid, json
-        audit_id = "aud_" + uuid.uuid4().hex[:8]
-        db.execute("""
-            INSERT INTO audit_log (audit_id, event_type, employee_id, message_id, payload_summary)
-            VALUES (?, 'signal_received', ?, ?, ?)
-        """, (
-            audit_id,
-            body.employee_id,
-            body.message_id,
-            json.dumps({"emoji_code": body.emoji_code, "resonance_score": resonance_score}),
-        ))
-        db.commit()
+        # Log to audit_log (never raises; a failed row is logged and dropped)
+        await write_audit(body.employee_id, body.message_id, "signal_received",
+                          {"emoji_code": body.emoji_code, "resonance_score": resonance_score})
 
         # Call Lead's kill-switch logic (from engines/rlm_engine.py)
         kill_switch_result = _call_kill_switch(body.employee_id, db)

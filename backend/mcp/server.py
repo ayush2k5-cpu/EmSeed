@@ -11,6 +11,7 @@ from backend.engines.sarvam_engine import generate_indic_rewrite
 from backend.engines.rlm_engine import check_kill_switch
 from backend.mcp.schema import MCPPayload
 from backend.db.database import DB_PATH
+from backend.db.audit import write_audit
 
 # We define the FastMCP server
 mcp = FastMCP("EmSeed", dependencies=["fastapi", "pydantic", "mcp"])
@@ -98,14 +99,9 @@ async def rewrite_message(recipient_id: str, original_draft: str) -> str:
             )
             target_rewrite = hindi_rewrite
             
-        # Try to write to audit
-        try:
-            from backend.api.rewrite import _write_audit
-            _write_audit(recipient_id, payload.message_id, "rewrite_generated",
-                           {"disc_type": context.disc_type, "retrieval_source": "mcp_cli"})
-        except Exception as e:
-            pass # ignore audit failure
-            
+        await write_audit(recipient_id, payload.message_id, "rewrite_generated",
+                          {"disc_type": context.disc_type, "retrieval_source": "mcp_cli"})
+
         return (
             f"Rewritten Message for {recipient_id} (DISC: {disc}):\n\n"
             f"{target_rewrite['text']}\n\n"
