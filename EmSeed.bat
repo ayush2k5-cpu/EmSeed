@@ -7,6 +7,12 @@ REM opens the app in your browser.
 setlocal
 cd /d "%~dp0"
 
+if not exist venv\Scripts\python.exe (
+    echo First time here? Run Setup.bat first.
+    pause
+    exit /b 1
+)
+
 echo Checking ports...
 
 powershell -NoProfile -Command "if (Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue) { exit 1 } else { exit 0 }"

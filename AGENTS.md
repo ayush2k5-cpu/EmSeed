@@ -246,6 +246,8 @@ dev/g         ← G's frontend branch
 
 ## Commands
 
+First time on a fresh clone: run `Setup.bat` (venv, dependencies, `.env` templates, demo seed), then `EmSeed.bat` to start everything.
+
 ```bash
 # Backend install
 pip install -r requirements.txt
