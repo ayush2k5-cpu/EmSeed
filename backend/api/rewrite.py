@@ -1,6 +1,3 @@
-import os
-import json
-import uuid as _uuid
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
@@ -10,23 +7,8 @@ from backend.rag.gemini_retriever import get_employee_context
 from backend.engines.groq_engine import generate_rewrites
 from backend.engines.sarvam_engine import generate_indic_rewrite
 from backend.engines.rlm_engine import check_kill_switch
-from backend.db.database import DB_PATH, get_db   # FIX: use absolute path constant
-
-def _write_audit(recipient_id: str, message_id: Optional[str], event_type: str, details: dict):
-    audit_id = "aud_" + _uuid.uuid4().hex[:8]
-    db = get_db()
-    try:
-        db.execute(
-            """
-            INSERT INTO audit_log (audit_id, event_type, employee_id, message_id, payload_summary)
-            VALUES (?, ?, ?, ?, ?)
-            """,
-            (audit_id, event_type, recipient_id, message_id, json.dumps(details)),
-        )
-        db.commit()
-    finally:
-        db.close()
-    return audit_id
+from backend.db.database import DB_PATH   # FIX: use absolute path constant
+from backend.db.audit import write_audit
 
 router = APIRouter(tags=["rewrite"])
 
@@ -73,8 +55,8 @@ async def rewrite_message(request: RewriteRequest):
         ks_result = check_kill_switch(context.employee_id, signals_list)
 
         if ks_result.get("status") == "kill_switch_engaged":
-            _write_audit(request.recipient_id, None, "kill_switch_engaged",
-                         {"reason": ks_result.get("reason"), "scores": ks_result.get("scores")})
+            await write_audit(request.recipient_id, None, "kill_switch_engaged",
+                              {"reason": ks_result.get("reason"), "scores": ks_result.get("scores")})
             return RewriteResponse(
                 success=True,
                 data={
@@ -117,9 +99,9 @@ async def rewrite_message(request: RewriteRequest):
                 rewrites[0] = hindi_rewrite
 
         # 6. MCP Audit — log every context call with audit_id (brief requirement)
-        _write_audit(request.recipient_id, payload.message_id, "rewrite_generated",
-                     {"disc_type": context.disc_type, "retrieval_source": context.language_preference,
-                      "variant_count": len(rewrites), "audit_id": payload.audit_id})
+        await write_audit(request.recipient_id, payload.message_id, "rewrite_generated",
+                          {"disc_type": context.disc_type, "retrieval_source": context.language_preference,
+                           "variant_count": len(rewrites), "audit_id": payload.audit_id})
 
         return RewriteResponse(
             success=True,

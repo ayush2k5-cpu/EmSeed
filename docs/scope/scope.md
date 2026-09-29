@@ -18,8 +18,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | E | Audit log (write and panel) | Existing | in-progress |
 | F | MCP tool server | Existing | existing |
 | G | Local launcher (EmSeed.bat) | Existing | in-progress |
-| 1 | Safe audit writes | Slice 1 | planned |
-| 2 | Merge PR #1 and ship the launcher | Slice 1 | planned |
+| 1 | Safe audit writes | Slice 1 | done |
+| 2 | Ship the launcher and the safe audit fix | Slice 1 | planned |
 | 3 | Env driven model settings | Slice 2 | planned |
 | 4 | Link rewrites to taps by message id | Slice 2 | planned |
 | 5 | Retire legacy demo employees | Slice 3 | planned |
@@ -51,16 +51,23 @@ Standalone server, registered in `.mcp.json`, connectable from Claude Desktop or
 
 ## Slice 1: Trust the safety path
 
-### 1. Safe audit writes · needs a decision
+### 1. Safe audit writes · done
 Audit writes must never turn a successful rewrite or kill switch response into an error. This is the one serious finding from the PR #1 review.
 **Done when:** a failing or locked audit write is logged and the user still gets the rewrite or kill switch warning, and the write no longer blocks the request loop.
-- [ ] Design it (spec): `/architect safe audit writes`
+**Spec:** [0001](../specs/0001-safe-audit-writes/index.md)
+code in `backend/db/audit.py`, `backend/db/database.py`, `backend/api/rewrite.py`, `backend/api/signals.py`, `backend/mcp/server.py`
+- [x] Design it (spec): `/architect safe audit writes`
+- [x] Build it: `/develop safe audit writes`
+  - [x] Shared helper `backend/db/audit.py` and `get_db` timeout (AC-5, AC-6, AC-7, AC-8)
+  - [x] Rewrite route and MCP server use it, old `_write_audit` removed (AC-1, AC-2, AC-4)
+  - [x] Tap route uses it (AC-3, AC-5)
+- [x] Verify it: `/check verify safe audit writes`
 
-### 2. Merge PR #1 and ship the launcher
-Land the reviewed work on main and commit `EmSeed.bat` so a fresh clone has the same launcher.
-**Done when:** PR #1 is merged after feature 1, `EmSeed.bat` is committed, and a fresh clone starts with the launcher.
-- [ ] Build it: `/develop merge PR 1 and ship the launcher`
-- [ ] Verify it: `/check verify merge PR 1 and ship the launcher`
+### 2. Ship the launcher and the safe audit fix
+PR #1 already merged to `main` (`c35af08`). `EmSeed.bat` is committed on `dev/lead`, but `dev/lead` (launcher plus feature 1) is not pushed or merged to `main` yet.
+**Done when:** `EmSeed.bat`, the safe audit writes fix and the docs are on `origin/main`, and a fresh clone starts with the launcher.
+- [ ] Build it: `/develop ship the launcher and the safe audit fix`
+- [ ] Verify it: `/check verify ship the launcher and the safe audit fix`
 
 ## Slice 2: Configuration and data joins
 
@@ -100,6 +107,8 @@ Out of scope for this pass, kept so the plan stays honest.
 - **MCP demo in Claude Desktop**: walk a live tool call end to end · needs a decision
 - **Auth and multi team support**: replaces the hardcoded `team_alpha` · needs a decision · GA
 - **Automated tests**: none exist today; worth adding once the safety path is fixed · needs a decision
+- **Sync SQLite in async routes, everywhere**: the wider version of feature 1's problem, breaks the project's own async rule · needs a decision · from spec 0001
+- **Audit failure counter or retry spool**: only if the audit trail must be complete, since spec 0001 drops failed rows and logs them · needs a decision · from spec 0001
 ## Legend
 
 **The decision box.** Every feature carries at most one box ending in `(spec)`. Its wording varies, so skills find it by that suffix. Every other box is an execution box and `/architect` never ticks one.
