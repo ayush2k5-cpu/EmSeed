@@ -26,6 +26,7 @@ export interface RewriteCard {
     discLabel: string;
     energyLevel: EnergyLevel;
     rewrittenMessage: string;
+    messageId?: string;
     approved: boolean;
 }
 

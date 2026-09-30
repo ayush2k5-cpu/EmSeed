@@ -74,6 +74,7 @@ export function useDashboardState() {
                         discLabel,
                         energyLevel: 'neutral',
                         rewrittenMessage: rewriteVariant.text,
+                        messageId: json.data.message_id,
                         approved: false
                     });
                 }
@@ -121,7 +122,8 @@ export function useDashboardState() {
             name: approvedRewrite.memberName,
             message: approvedRewrite.rewrittenMessage,
             employeeId: approvedRewrite.memberId,
-            messageId: `msg_${Date.now()}`
+            // The server's id for this rewrite; without it the tap page records nothing.
+            messageId: approvedRewrite.messageId
         } : undefined;
 
         // When sending, instantly transition to the Employee Tap Screen with state
