@@ -17,16 +17,13 @@ async function fetchLiveVitals(): Promise<VitalBar[] | null> {
         const json = await response.json();
         if (!json.success || !json.data?.members) return null;
 
-        // The DB still carries legacy demo employees (emp_001/2/3) under the same
-        // team_id — only show the current roster the rest of the UI knows about.
         return json.data.members
-            .filter((m: any) => teamMembers.some((t) => t.id === m.employee_id))
             .map((m: any) => {
-                const known = teamMembers.find((t) => t.id === m.employee_id)!;
+                const known = teamMembers.find((t) => t.id === m.employee_id);
                 const score = m.last_resonance ?? m.resonance_7day_avg ?? 0;
                 return {
                     memberId: m.employee_id,
-                    name: known.name,
+                    name: known?.name ?? m.employee_id.charAt(0).toUpperCase() + m.employee_id.slice(1),
                     score,
                     energyLevel: scoreToEnergyLevel(score),
                     emoji: m.last_emoji || '—',
