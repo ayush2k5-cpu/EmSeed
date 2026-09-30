@@ -41,14 +41,20 @@ def _mock_fallback(employee_id: str) -> list[dict]:
 
 
 def _generate_all_variants(client: Groq, variants: list[str], fallback_prompt: Optional[str], user_prompt: str) -> list[dict]:
+    # Read at call time so .env changes apply on restart and the MCP server (no load_dotenv) still works.
+    # Blank values fall back to the defaults.
+    model = os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b"
+    # Keep this low: gpt-oss spends max_tokens on hidden reasoning, and at higher effort
+    # the 300 token cap can be used up before any text is written, returning an empty rewrite.
+    reasoning_effort = os.getenv("GROQ_REASONING_EFFORT") or "low"
     rewrites = []
     for variant in variants:
         system_prompt = fallback_prompt if fallback_prompt else DISC_PROMPTS.get(variant, "")
         response = client.chat.completions.create(
-            model="openai/gpt-oss-120b",
+            model=model,
             temperature=0.7,
             max_tokens=300,
-            reasoning_effort="low",
+            reasoning_effort=reasoning_effort,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
