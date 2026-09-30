@@ -26,10 +26,11 @@ async def get_audit_log(
     limit: int = Query(default=20, ge=1, le=100),
     event_type: str = Query(default=None),
     employee_id: str = Query(default=None),
+    message_id: str = Query(default=None),
 ):
     """
     Returns a paginated audit log.
-    Filterable by event_type and employee_id.
+    Filterable by event_type, employee_id and message_id.
     """
     db = get_db()
     try:
@@ -44,6 +45,10 @@ async def get_audit_log(
         if employee_id:
             conditions.append("employee_id = ?")
             params.append(employee_id)
+
+        if message_id:
+            conditions.append("message_id = ?")
+            params.append(message_id)
 
         where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 

@@ -107,6 +107,7 @@ async def rewrite_message(request: RewriteRequest):
             success=True,
             data={
                 "kill_switch_engaged": False,
+                "message_id": payload.message_id,
                 "rewrites": rewrites
             }
         )

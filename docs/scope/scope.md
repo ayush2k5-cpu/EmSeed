@@ -21,7 +21,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1 | Safe audit writes | Slice 1 | done |
 | 2 | Ship the launcher and the safe audit fix | Slice 1 | done |
 | 3 | Env driven model settings | Slice 2 | done |
-| 4 | Link rewrites to taps by message id | Slice 2 | planned |
+| 4 | Link rewrites to taps by message id | Slice 2 | done |
 | 5 | Retire legacy demo employees | Slice 3 | planned |
 | 6 | Shared kill switch name formatting | Slice 3 | planned |
 | 7 | Refresh AGENTS.md demo facts | Slice 3 | planned |
@@ -79,11 +79,17 @@ Model name and reasoning effort move to environment variables like the existing 
 code in `backend/engines/groq_engine.py`, `.env.example` (`GROQ_MODEL`, `GROQ_REASONING_EFFORT`)
 - [x] Verify it: `/check verify env driven model settings`
 
-### 4. Link rewrites to taps by message id
+### 4. Link rewrites to taps by message id · done
 The tap signal uses a client made id that does not match the server's id on the rewrite audit row, so a rewrite and its reaction cannot be joined.
 **Done when:** a tap records the same message id the rewrite was logged with, and one query returns both for a message.
-- [ ] Build it: `/develop link rewrites to taps by message id`
-- [ ] Verify it: `/check verify link rewrites to taps by message id`
+**Spec:** [0002](../specs/0002-link-rewrites-to-taps/index.md)
+code in `backend/api/rewrite.py`, `backend/api/audit.py`, `frontend/src/hooks/useDashboardState.ts`, `frontend/src/types/index.ts`
+- [x] Design it (spec): `/architect link rewrites to taps by message id`
+- [x] Build it: `/develop link rewrites to taps by message id`
+  - [x] Rewrite response returns the server's message id (AC-1, AC-2, AC-3, AC-8)
+  - [x] Audit log filter by message id, tap route left as is (AC-5, AC-7)
+  - [x] Dashboard carries the real id to the tap page, no made up id (AC-4, AC-6)
+- [x] Verify it: `/check verify link rewrites to taps by message id`
 
 ## Slice 3: Cleanup
 
@@ -111,6 +117,8 @@ Out of scope for this pass, kept so the plan stays honest.
 - **Automated tests**: none exist today; worth adding once the safety path is fixed · needs a decision
 - **Sync SQLite in async routes, everywhere**: the wider version of feature 1's problem, breaks the project's own async rule · needs a decision · from spec 0001
 - **Audit failure counter or retry spool**: only if the audit trail must be complete, since spec 0001 drops failed rows and logs them · needs a decision · from spec 0001
+- **Draft level message id**: one view of a draft sent to several people, needs its own id and key · needs a decision · from spec 0002
+- **Index on audit_log.message_id**: only if the audit table grows large · from spec 0002
 ## Legend
 
 **The decision box.** Every feature carries at most one box ending in `(spec)`. Its wording varies, so skills find it by that suffix. Every other box is an execution box and `/architect` never ticks one.
