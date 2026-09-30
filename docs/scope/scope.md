@@ -19,8 +19,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | F | MCP tool server | Existing | existing |
 | G | Local launcher (EmSeed.bat) | Existing | in-progress |
 | 1 | Safe audit writes | Slice 1 | done |
-| 2 | Ship the launcher and the safe audit fix | Slice 1 | in-progress |
-| 3 | Env driven model settings | Slice 2 | planned |
+| 2 | Ship the launcher and the safe audit fix | Slice 1 | done |
+| 3 | Env driven model settings | Slice 2 | done |
 | 4 | Link rewrites to taps by message id | Slice 2 | planned |
 | 5 | Retire legacy demo employees | Slice 3 | planned |
 | 6 | Shared kill switch name formatting | Slice 3 | planned |
@@ -63,20 +63,21 @@ code in `backend/db/audit.py`, `backend/db/database.py`, `backend/api/rewrite.py
   - [x] Tap route uses it (AC-3, AC-5)
 - [x] Verify it: `/check verify safe audit writes`
 
-### 2. Ship the launcher and the safe audit fix · in-progress
+### 2. Ship the launcher and the safe audit fix · done
 PR #1 already merged to `main` (`c35af08`). `EmSeed.bat` is committed on `dev/lead`, and `dev/lead` (launcher plus feature 1) is pushed as of 2026-09-29 (`97bdd14`) but not merged to `main` yet.
 **Done when:** `EmSeed.bat`, the safe audit writes fix and the docs are on `origin/main`, and a fresh clone starts with the launcher.
 Added `Setup.bat` (2026-09-29) so a fresh clone can get the venv, dependencies, `.env` and demo data before the launcher runs.
 - [x] Build it: `/develop ship the launcher and the safe audit fix`
-- [ ] Verify it: `/check verify ship the launcher and the safe audit fix`
+- [x] Verify it: `/check verify ship the launcher and the safe audit fix`
 
 ## Slice 2: Configuration and data joins
 
-### 3. Env driven model settings
+### 3. Env driven model settings · done
 Model name and reasoning effort move to environment variables like the existing rate limit settings, with the current values as defaults. The empty text failure without `reasoning_effort="low"` gets a comment.
 **Done when:** changing the model or effort in `.env` changes the Groq call with no code edit, and defaults reproduce today's behavior.
-- [ ] Build it: `/develop env driven model settings`
-- [ ] Verify it: `/check verify env driven model settings`
+- [x] Build it: `/develop env driven model settings`
+code in `backend/engines/groq_engine.py`, `.env.example` (`GROQ_MODEL`, `GROQ_REASONING_EFFORT`)
+- [x] Verify it: `/check verify env driven model settings`
 
 ### 4. Link rewrites to taps by message id
 The tap signal uses a client made id that does not match the server's id on the rewrite audit row, so a rewrite and its reaction cannot be joined.
