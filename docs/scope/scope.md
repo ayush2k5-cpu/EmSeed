@@ -22,8 +22,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 2 | Ship the launcher and the safe audit fix | Slice 1 | done |
 | 3 | Env driven model settings | Slice 2 | done |
 | 4 | Link rewrites to taps by message id | Slice 2 | done |
-| 5 | Retire legacy demo employees | Slice 3 | planned |
-| 6 | Shared kill switch name formatting | Slice 3 | planned |
+| 5 | Retire legacy demo employees | Slice 3 | done |
+| 6 | Shared kill switch name formatting | Slice 3 | done |
 | 7 | Refresh AGENTS.md demo facts | Slice 3 | planned |
 
 ## Already built (enrolled for context)
@@ -93,16 +93,23 @@ code in `backend/api/rewrite.py`, `backend/api/audit.py`, `frontend/src/hooks/us
 
 ## Slice 3: Cleanup
 
-### 5. Retire legacy demo employees · needs a decision
+### 5. Retire legacy demo employees · done
 Old `emp_001/2/3` rows still sit in `team_alpha` and are hidden by a frontend filter. The real fix is server side, which needs a status marker or a data migration.
 **Done when:** the pulse endpoint returns only current roster members and the frontend filter is removed.
-- [ ] Design it (spec): `/architect retire legacy demo employees`
+**Spec:** [0003](../specs/0003-retire-legacy-demo-employees.md)
+code in `backend/db/seed_demo.sql`, `frontend/src/components/VitalsTab.tsx`
+- [x] Design it (spec): `/architect retire legacy demo employees`
+- [x] Build it: `/develop retire legacy demo employees`
+  - [x] Seed script deletes the legacy rows, checked on a scratch copy (AC-1, AC-2, AC-3, AC-4)
+  - [x] Vitals tab drops the filter and names unknown members from their id (AC-5, AC-6)
+- [x] Verify it: `/check verify retire legacy demo employees`
 
-### 6. Shared kill switch name formatting
+### 6. Shared kill switch name formatting · done
 The name joining logic is duplicated and reads badly for three or more names.
 **Done when:** one helper formats the list, both places use it, and three names read correctly.
-- [ ] Build it: `/develop shared kill switch name formatting`
-- [ ] Verify it: `/check verify shared kill switch name formatting`
+- [x] Build it: `/develop shared kill switch name formatting`
+code in `frontend/src/utils/formatNames.ts`, `frontend/src/components/RewriteModal.tsx`, `frontend/src/hooks/useDashboardState.ts`
+- [x] Verify it: `/check verify shared kill switch name formatting`
 
 ### 7. Refresh AGENTS.md demo facts
 The demo roster table still lists Riya, Karan and Priya, the Demo Mode section describes a `config.js` that does not exist, and the key table predates the model swap.

@@ -4,6 +4,14 @@
 -- Idempotent: INSERT OR REPLACE ensures no duplicates on repeat runs
 -- ============================================================
 
+-- ── LEGACY CLEANUP ───────────────────────────────────────────
+-- emp_001/2/3 were the original demo roster. They linger in databases seeded
+-- before the roster changed and would be counted in team size, average and
+-- contagion. Child rows go first (foreign keys). audit_log is left alone.
+DELETE FROM signals  WHERE employee_id  IN ('emp_001', 'emp_002', 'emp_003');
+DELETE FROM messages WHERE recipient_id IN ('emp_001', 'emp_002', 'emp_003');
+DELETE FROM employees WHERE id          IN ('emp_001', 'emp_002', 'emp_003');
+
 -- ── EMPLOYEES ────────────────────────────────────────────────
 INSERT OR REPLACE INTO employees
     (id, name, disc_type, language_preference, communication_preference, energy_baseline, team_id, created_at, updated_at)

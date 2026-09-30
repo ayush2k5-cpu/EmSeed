@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { DashboardState, RewriteCard as RewriteCardType } from '../types';
+import { formatNames } from '../utils/formatNames';
 
 export function useDashboardState() {
     const [currentState, setCurrentState] = useState<DashboardState>('default');
@@ -90,7 +91,7 @@ export function useDashboardState() {
                 setCurrentState('modal');
             } else if (triggeredNames.length > 0) {
                 // Every selected recipient hit the kill-switch — nothing left to review.
-                setKillSwitchRecipient(triggeredNames.join(' and '));
+                setKillSwitchRecipient(formatNames(triggeredNames));
                 setCurrentState('killswitch');
             } else {
                 alert("Could not generate rewrites from the backend. Make sure the backend is running.");

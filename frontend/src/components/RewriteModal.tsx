@@ -1,6 +1,7 @@
 import React from 'react';
 import type { RewriteCard as RewriteCardType } from '../types';
 import RewriteCard from './RewriteCard';
+import { formatNames } from '../utils/formatNames';
 
 interface RewriteModalProps {
     rewrites: RewriteCardType[];
@@ -36,7 +37,7 @@ export default function RewriteModal({
                     {killSwitchSkipped.length > 0 && (
                         <div className="mb-6 bg-[#FFE8E6] border border-[#E8736A] rounded-[14px] p-5">
                             <div className="font-sans text-[14px] font-semibold text-[#E8736A]">
-                                ⚠️ {killSwitchSkipped.join(' and ')} {killSwitchSkipped.length === 1 ? 'was' : 'were'} skipped
+                                ⚠️ {formatNames(killSwitchSkipped)} {killSwitchSkipped.length === 1 ? 'was' : 'were'} skipped
                             </div>
                             <div className="mt-2 font-sans text-[13px] text-teal">
                                 Sustained low resonance detected. {killSwitchSkipped.length === 1 ? "This isn't" : "These aren't"} a message problem — talk to {killSwitchSkipped.length === 1 ? 'them' : 'them'} directly instead.
