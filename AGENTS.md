@@ -41,36 +41,46 @@ The only working copy is `C:\Ojas\projects\active\EmSeed`, a git clone of `ayush
 EmSeed/
 ├── backend/
 │   ├── main.py              # FastAPI app entry point
-│   ├── api/                 # Route handlers (employees, signals, teams, alerts, audit)
+│   ├── api/                 # Route handlers (employees, signals, teams, alerts, audit, rewrite)
 │   ├── db/
+│   │   ├── database.py      # get_db(), init_db(), DB_PATH
+│   │   ├── audit.py         # write_audit(): the one audit_log writer (never raises)
 │   │   ├── schema.sql       # SQLite schema
-│   │   └── seed_demo.sql    # Demo data seed
+│   │   └── seed_demo.sql    # Demo data seed (also removes the retired emp_001/2/3)
 │   ├── engines/
 │   │   ├── groq_engine.py   # Groq rewrite pipeline
 │   │   ├── sarvam_engine.py # Sarvam Indic rewrite
 │   │   ├── rlm_engine.py    # Contagion + kill-switch logic
 │   │   └── prompts.py       # DISC system prompts
 │   ├── mcp/
-│   │   └── schema.py        # MCPPayload + EmployeeContext dataclasses
+│   │   ├── schema.py        # MCPPayload + EmployeeContext dataclasses
+│   │   └── server.py        # Standalone MCP tool server
+│   ├── models/
+│   │   └── schemas.py       # Request and response models
 │   ├── rag/
 │   │   └── gemini_retriever.py  # Gemini API context retrieval
 │   └── middleware/
-│       ├── audit.py         # Audit log middleware
 │       └── rate_limit.py    # API rate limiter
 ├── frontend/
 │   ├── src/
-│   │   ├── screens/         # Onboarding, Compose, Pulse, KillSwitch
-│   │   ├── components/      # RewriteCard, EmojiTap, AlertBanner, etc.
-│   │   └── mock_data/       # rewrites.json, pulse.json for demo mode
+│   │   ├── pages/           # Dashboard, DiscSurvey, ProfileReveal, EmojiTap, SdkLanding
+│   │   ├── components/      # RewriteCard, RewriteModal, VitalsTab, KillSwitch, etc.
+│   │   ├── hooks/           # useDashboardState
+│   │   ├── utils/           # formatNames
+│   │   ├── data/            # mockData.ts (roster names, demo fallbacks)
+│   │   └── mock_data/       # rewrites.json, pulse.json
 │   └── public/
 ├── scripts/
-│   └── seed_demo.py         # Seeds Riya, Karan, Priya for demo
+│   └── seed_demo.py         # Seeds Priyanshu, Granth, Anika, Rahul for demo
 ├── copy/
 │   └── screen_copy.json     # All UX copy — owned by S, consumed by G
 ├── disc/
 │   └── survey_mapping.json  # DISC question → archetype mapping
+├── docs/                    # scope (docs/scope) and specs (docs/specs)
+├── Setup.bat                # One time setup for a fresh clone
+├── EmSeed.bat               # Starts backend and frontend
 ├── .env.example             # Environment variable template
-└── CLAUDE.md                # This file
+└── AGENTS.md                # This file (CLAUDE.md imports it)
 ```
 
 ---
@@ -85,6 +95,8 @@ EmSeed/
 | Sarvam AI | `SARVAM_API_KEY_1`, `SARVAM_API_KEY_2` | ~500 req/day | **50 req/hr, 5 req/min** |
 | Gemini API | `GEMINI_API_KEY_1`, `GEMINI_API_KEY_2` | 60 req/min (free) | **15 req/min, 1,000 req/hr** |
 | SQLite | local file | unlimited | n/a |
+
+**Models in use:** Groq `openai/gpt-oss-120b` with `reasoning_effort` low, set by `GROQ_MODEL` and `GROQ_REASONING_EFFORT` in `.env` (those are the defaults, and blank falls back to them). Keep effort low: at higher effort the model can spend the 300 token cap on hidden reasoning and return empty text. Sarvam `sarvam-translate:v1`. Gemini `gemini-1.5-flash`.
 
 **Rate limit enforcement:** Each service runs two keys through a round robin `KeyRotator` (`middleware/rate_limit.py`) — when one key hits its per-key cap, requests move to the next key before falling back. P does not need to implement this — Lead owns it.
 
@@ -104,13 +116,13 @@ EmSeed/
 
 3. **No PII in API calls.** When calling Groq or Sarvam, send only the message text and DISC context. Never send employee names, IDs, or identifiers to third-party APIs.
 
-4. **Every MCP context call gets an `audit_id`.** Lead's middleware auto-generates this. P stores it in `audit_log`. No exceptions.
+4. **Every MCP context call gets an `audit_id`.** `write_audit` in `backend/db/audit.py` writes the `audit_log` row. It never raises: a failed write is logged and dropped, so a logging problem never replaces a rewrite, kill switch or tap response. No exceptions.
 
 5. **Kill-switch logic is rule-based.** It does not call any external API. It is a pure Python function in `rlm_engine.py`. It must always work, even if everything else is down.
 
 6. **Demo data must be idempotent.** Running `seed_demo.py` twice should not create duplicate employees. Use `INSERT OR REPLACE`.
 
-**Gotcha — re-seed before every demo/session.** `signals.created_at` defaults to `strftime('now')` at insert time, and the kill switch / resonance history only look back 7 days (`get_employee_context(..., days=7)`). If `seed_demo.py` was last run more than 7 days ago, all seeded signals age out of that window silently — the kill switch stops firing and resonance bars go flat, with no error anywhere. Run `python scripts/seed_demo.py` (safe, idempotent) right before demoing or resuming work after a break.
+**Gotcha — re-seed before every demo/session.** `signals.created_at` defaults to `strftime('now')` at insert time, and the kill switch / resonance history only look back 7 days (`get_employee_context(..., days=7)`). If `seed_demo.py` was last run more than 7 days ago, all seeded signals age out of that window silently — the kill switch stops firing and resonance bars go flat, with no error anywhere. Run `python scripts/seed_demo.py` (safe, idempotent) right before demoing or resuming work after a break. The seed also deletes the retired demo employees `emp_001/2/3` if an old database still has them.
 
 ### Strongly Preferred
 
@@ -153,15 +165,11 @@ Font:         Inter (Google Fonts)
 - If copy isn't ready, use placeholder text from `PITCH_DECK_OUTLINE.md` Slide 4.
 
 ### Demo Mode
-Frontend is Vite, not Create React App — use `VITE_DEMO_MODE`, read via `import.meta.env`, not `process.env.REACT_APP_*`:
-```javascript
-// frontend/src/config.js (not created yet)
-export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
-
-// In API calls:
-if (DEMO_MODE) return mockData.rewrites[employeeId];
-```
-Set `VITE_DEMO_MODE=true` in `frontend/.env` before demo (see `frontend/.env.example`). Set to `false` for live API testing. As of this audit, `config.js` does not exist yet and nothing in `frontend/src` reads this flag — mock data (`src/mock_data/`, `src/data/mockData.ts`) is used directly by components instead.
+`VITE_DEMO_MODE` is in `frontend/.env.example` but nothing in `frontend/src` reads it, and there is no `config.js`. Do not build on it. What the frontend really does today:
+- It calls the real backend at `VITE_API_URL` (default `http://localhost:8000`).
+- The Vitals tab falls back to `mockVitals` in `src/data/mockData.ts` when the backend is unreachable, and says so ("Demo data · backend unreachable").
+- The backend falls back to `frontend/src/mock_data/rewrites.json` when Groq is unavailable. That file only has entries for the retired `emp_001/2/3`, so the current roster gets a generic "live rewrite unavailable" message instead.
+- Roster names on the dashboard come from `teamMembers` in `src/data/mockData.ts`.
 
 ---
 
@@ -180,8 +188,24 @@ Full prompt library: `DISC_PROMPT_LIBRARY.md`
 
 ## Demo Data Reference
 
-| Employee | ID | DISC | Language | State |
-|---------|-----|------|----------|-------|
+Roster from `backend/db/seed_demo.sql`, all in `team_alpha`:
+
+| Employee | ID | DISC | Language | Last 3 resonance scores | State |
+|---------|-----|------|----------|-------------------------|-------|
+| Priyanshu | `priyanshu` | D | English | 90, 85, 90 | High resonance (engaged) |
+| Granth | `granth` | S | Hindi | 90, 75, 40 | Moderate (shows the Sarvam Hindi rewrite) |
+| Anika | `anika` | C | English | 75, 90, 40 | Moderate (stable) |
+| Rahul | `rahul` | I | English | 22, 15, 15 | Low resonance (kill-switch trigger) |
+
+Rahul's scores are all below the kill switch floor (25, three in a row), so the kill switch fires at the demo moment. The old demo roster (`emp_001` Riya, `emp_002` Karan, `emp_003` Priya) is retired; re-seeding removes those rows.
+
+## Message ids and the audit log
+
+- `POST /api/rewrite` returns `data.message_id`, one id per rewrite for one recipient (not returned when the kill switch fires). It is the same id logged on the `rewrite_generated` audit row.
+- The dashboard passes that id to the tap page, and the tap posts it to `POST /api/signal/tap`. The frontend never makes up an id. The tap route accepts any id, including ones no rewrite made.
+- `GET /api/audit/log?message_id=<id>` returns the rewrite row and every tap row for that message. It also takes `event_type` and `employee_id`.
+
+---------|-----|------|----------|-------|
 | Riya | `emp_001` | D | English | High resonance (engaged) |
 | Karan | `emp_002` | S | Hindi | Low resonance (kill-switch trigger) |
 | Priya | `emp_003` | C | English | Moderate resonance (stable) |

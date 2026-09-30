@@ -24,7 +24,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 4 | Link rewrites to taps by message id | Slice 2 | done |
 | 5 | Retire legacy demo employees | Slice 3 | done |
 | 6 | Shared kill switch name formatting | Slice 3 | done |
-| 7 | Refresh AGENTS.md demo facts | Slice 3 | planned |
+| 7 | Refresh AGENTS.md demo facts | Slice 3 | done |
 
 ## Already built (enrolled for context)
 
@@ -111,10 +111,11 @@ The name joining logic is duplicated and reads badly for three or more names.
 code in `frontend/src/utils/formatNames.ts`, `frontend/src/components/RewriteModal.tsx`, `frontend/src/hooks/useDashboardState.ts`
 - [x] Verify it: `/check verify shared kill switch name formatting`
 
-### 7. Refresh AGENTS.md demo facts
+### 7. Refresh AGENTS.md demo facts · done
 The demo roster table still lists Riya, Karan and Priya, the Demo Mode section describes a `config.js` that does not exist, and the key table predates the model swap.
 **Done when:** AGENTS.md matches the real roster, the real model, and the real frontend config.
-- [ ] Build it: `/develop refresh AGENTS.md demo facts`
+- [x] Build it: `/develop refresh AGENTS.md demo facts`
+code in `AGENTS.md`
 
 ## Deferred
 Out of scope for this pass, kept so the plan stays honest.
